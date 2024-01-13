@@ -1,7 +1,9 @@
 import MonacoEditor, { OnMount, Monaco } from "@monaco-editor/react"
-import React, { useRef } from "react"
+import { useRef } from "react"
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
-
+import prettier from "prettier/standalone"
+import babelPlugin from "prettier/plugins/babel"
+import estreePlugin from "prettier/plugins/estree"
 interface CodeEditorProps {
   initialValue: string
   onChange(value: string): void
@@ -18,24 +20,42 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ onChange, initialValue }) => {
     editor.onDidChangeModelContent(() => onChange(editor.getValue()))
     editor.updateOptions({ tabSize: 2 })
   }
+
+  const onFormatClick = async () => {
+    const unformatted = editorRef.current?.getValue()
+    console.log(editorRef.current)
+    if (unformatted) {
+      const formated = await prettier.format(unformatted, {
+        parser: "babel",
+        plugins: [babelPlugin, estreePlugin],
+        useTabs: false,
+        semi: true,
+        singleQuote: true,
+      })
+      editorRef.current?.setValue(formated)
+    }
+  }
   return (
-    <MonacoEditor
-      onMount={onEditorDidMount}
-      value={initialValue}
-      theme="vs-dark"
-      language="javascript"
-      height="500px"
-      options={{
-        wordWrap: "on",
-        minimap: { enabled: false },
-        showUnused: false,
-        folding: false,
-        lineNumbersMinChars: 3,
-        fontSize: 16,
-        scrollBeyondLastLine: false,
-        automaticLayout: true,
-      }}
-    />
+    <div>
+      <button onClick={onFormatClick}>Format</button>
+      <MonacoEditor
+        onMount={onEditorDidMount}
+        value={initialValue}
+        theme="vs-dark"
+        language="javascript"
+        height="500px"
+        options={{
+          wordWrap: "on",
+          minimap: { enabled: false },
+          showUnused: false,
+          folding: false,
+          lineNumbersMinChars: 3,
+          fontSize: 16,
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+        }}
+      />
+    </div>
   )
 }
 
