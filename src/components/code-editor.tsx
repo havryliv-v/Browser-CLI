@@ -1,3 +1,6 @@
+import "bulmaswatch/superhero/bulmaswatch.min.css"
+import "./code-editor.css"
+
 import MonacoEditor, { OnMount, Monaco } from "@monaco-editor/react"
 import { useRef } from "react"
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
@@ -25,19 +28,26 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ onChange, initialValue }) => {
     const unformatted = editorRef.current?.getValue()
     console.log(editorRef.current)
     if (unformatted) {
-      const formated = await prettier.format(unformatted, {
-        parser: "babel",
-        plugins: [babelPlugin, estreePlugin],
-        useTabs: false,
-        semi: true,
-        singleQuote: true,
-      })
+      const formated = await (
+        await prettier.format(unformatted, {
+          parser: "babel",
+          plugins: [babelPlugin, estreePlugin],
+          useTabs: false,
+          semi: true,
+          singleQuote: true,
+        })
+      ).replace(/\n$/, "")
       editorRef.current?.setValue(formated)
     }
   }
   return (
-    <div>
-      <button onClick={onFormatClick}>Format</button>
+    <div className="editor-wrapper">
+      <button
+        className="button button-format is-primary is-small"
+        onClick={onFormatClick}
+      >
+        Format
+      </button>
       <MonacoEditor
         onMount={onEditorDidMount}
         value={initialValue}
