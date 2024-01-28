@@ -1,5 +1,5 @@
 import "./code-editor.css"
-import "./syntax.css"
+import "../syntax.css"
 
 import { useRef } from "react"
 import MonacoEditor, { EditorDidMount } from "@monaco-editor/react"

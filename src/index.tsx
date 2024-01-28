@@ -4,7 +4,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css"
 import { Provider } from "react-redux"
 import { store } from "./state"
 import ReactDOM from "react-dom/client"
-import CellList from "./components/cell-list"
+import CellList from "./components/cell-list/cell-list"
 const el = document.getElementById("root")
 
 const root = ReactDOM.createRoot(el!)
